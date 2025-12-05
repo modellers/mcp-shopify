@@ -11,12 +11,12 @@
 
 Allows user to get endpoints (not create, update or delete)
 
-### Inventory
+### Inventory (GET/LIST)
     - get_item
     - list_items
     - total_items
 
-### Accounting
+### Accounting (GET/LIST)
     - get_item
     - list_sales
     - total_sales
