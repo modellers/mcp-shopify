@@ -1,20 +1,50 @@
 # Shopify MCP Server
 
+## Project Overview
+
+**Type:** Model Context Protocol (MCP) Server
+**Purpose:** Enable AI assistants to manage ConsignCloud inventory, sales, and accounts
+**Language:** TypeScript
+**Runtime:** Node.js
+
+## Available tools
+
 Allows user to get endpoints (not create, update or delete)
 
-    - inventory
-        - get_item
-        - list_items
-        - total_items
-    ... 
-    - accounting
-        - get_item
-        - list_sales
-        - total_sales
-    ... 
+### Inventory
+    - get_item
+    - list_items
+    - total_items
+
+### Accounting
+    - get_item
+    - list_sales
+    - total_sales
 
 ## Technical stack
+
+Supporting stdio / sse / http-streaming
+
     - Typescript
+    - @modelcontextprotocol/sdk
+
+Strong logging showing user what is going. Follows best MCP practices. 
+
+### HTTP/SSE Server Enhancements
+
+**CLI Argument Support**
+- Override env vars: `node dist/http-server.js --api-key KEY --port 3001`
+- Priority: CLI args > env vars > .env file
+
+ **Enhanced Error Logging**
+- HTTP status code explanations (401, 403, 404, 422, 429, 500+)
+- Request context (method, URL)
+- Validation error parsing
+- Network error detection
+
+ **Security**
+- API keys masked in logs (shows first 8 and last 4 chars)
+- Configuration displayed on startup for transparency
 
 ## Configuration
 Is loaded from env variables
@@ -33,3 +63,18 @@ See .env.example
 ## Development and tests
 
 When testing we should have 1-3 second timeout randomly to not overwhelm the api. We wrap the main API with cache-wrapper.ts
+
+**Test with inspector (stdio):**
+```bash
+npx @modelcontextprotocol/inspector node dist/index.js
+```
+
+**Test with inspector (HTTP):**
+```bash
+npx @modelcontextprotocol/inspector http://localhost:3000/sse
+```
+
+**Build:**
+```bash
+npm run build
+```
