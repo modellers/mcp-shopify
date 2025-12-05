@@ -47,6 +47,7 @@ Strong logging showing user what is going. Follows best MCP practices.
 - Configuration displayed on startup for transparency
 
 ## Configuration
+
 Is loaded from env variables
     - SHOPIFY_APP_CLIENT_ID="..."
     - SHOPIFY_APP_SECRET="shpss_..."
@@ -62,7 +63,9 @@ See .env.example
 
 ## Development and tests
 
-When testing we should have 1-3 second timeout randomly to not overwhelm the api. We wrap the main API with cache-wrapper.ts
+When testing we should have 1-3 second timeout randomly to not overwhelm the api. We wrap the main API with cache-wrapper.ts .
+
+Prefer testing the MCP endpoint yourself fully until saying you are done.
 
 **Test with inspector (stdio):**
 ```bash
