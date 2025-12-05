@@ -37,6 +37,8 @@ const config = getConfig();
 
 // Initialize Shopify client
 const shopify = shopifyApi({
+  // For custom apps, apiSecretKey is required by the SDK but not used for authentication.
+  // Only adminApiAccessToken is actually used for API calls.
   apiSecretKey: "not-needed-for-custom-app",
   adminApiAccessToken: config.SHOPIFY_ACCESS_TOKEN,
   apiVersion: ApiVersion.October24,
