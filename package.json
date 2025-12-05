@@ -1,0 +1,29 @@
+{
+  "name": "mcp-shopify",
+  "version": "1.0.0",
+  "description": "MCP server for Shopify integration with accounting, inventory, and summaries features",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-shopify": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": ["mcp", "shopify", "accounting", "inventory", "ecommerce"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.3",
+    "@shopify/shopify-api": "^12.1.2",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
