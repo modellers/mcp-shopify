@@ -37,7 +37,8 @@ const config = getConfig();
 
 // Initialize Shopify client
 const shopify = shopifyApi({
-  apiSecretKey: config.SHOPIFY_ACCESS_TOKEN,
+  apiSecretKey: "not-needed-for-custom-app",
+  adminApiAccessToken: config.SHOPIFY_ACCESS_TOKEN,
   apiVersion: ApiVersion.October24,
   isCustomStoreApp: true,
   isEmbeddedApp: false,
@@ -45,7 +46,7 @@ const shopify = shopifyApi({
 });
 
 // Create a session for API calls
-const session = shopify.session.customAppSession(config.SHOPIFY_SHOP_NAME);
+const session = shopify.session.customAppSession(`${config.SHOPIFY_SHOP_NAME}.myshopify.com`);
 session.accessToken = config.SHOPIFY_ACCESS_TOKEN;
 
 // Create GraphQL client
@@ -571,11 +572,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             variables: {
               input: {
                 reason: "correction",
-                name: "available",
                 quantities: [
                   {
                     inventoryItemId,
                     locationId,
+                    name: "available",
                     quantity: available,
                   },
                 ],
@@ -597,14 +598,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "get_store_summary": {
         const productsQuery = `
           query getProducts {
-            products(first: 1) {
+            products(first: 250) {
               edges {
                 node {
                   id
                 }
               }
             }
-            productsCount: productsCount
           }
         `;
 
@@ -649,6 +649,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         });
 
         const orders = (recentOrdersResponse.body as any).data.orders.edges;
+        const products = (productsResponse.body as any).data.products.edges;
         const totalRevenue = orders.reduce(
           (sum: number, edge: any) =>
             sum + parseFloat(edge.node.totalPriceSet.shopMoney.amount),
@@ -658,7 +659,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const summary = {
           store_name: config.SHOPIFY_SHOP_NAME,
           products: {
-            total: (productsResponse.body as any).data.productsCount?.count || 0,
+            total: products.length,
           },
           orders: {
             recent_count: orders.length,
