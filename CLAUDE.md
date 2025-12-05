@@ -20,6 +20,7 @@ Allows user to get endpoints (not create, update or delete)
 Is loaded from env variables
     - SHOPIFY_APP_CLIENT_ID="..."
     - SHOPIFY_APP_SECRET="shpss_..."
+    - SHOPIFY_APP_ENDPOINT="https://{store}.myshopify.com/admin/api/2025-10/graphql.json"  (settings > domains)
     - STORE_COUNTRY=IS
     - STORE_CURRENCY=ISK
     - STORE_LOCALE=is-IS
