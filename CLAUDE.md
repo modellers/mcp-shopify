@@ -50,7 +50,7 @@ Strong logging showing user what is going. Follows best MCP practices.
 
 Is loaded from env variables
     - SHOPIFY_APP_CLIENT_ID="..."
-    - SHOPIFY_APP_SECRET="shpss_..."
+    - SHOPIFY_APP_SECRET="shpat_or_shpss_your_token_here"
     - SHOPIFY_APP_ENDPOINT="https://{store}.myshopify.com/admin/api/2025-10/graphql.json"  (settings > domains)
     - STORE_COUNTRY=IS
     - STORE_CURRENCY=ISK

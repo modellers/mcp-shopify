@@ -1,0 +1,42 @@
+{
+  "name": "mcp-shopify",
+  "version": "1.0.0",
+  "description": "MCP server for Shopify inventory and sales management",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-shopify": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepare": "npm run build",
+    "inspector:stdio": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "inspector:http": "npx @modelcontextprotocol/inspector http://localhost:3022/sse"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/modellers/mcp-shopify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/modellers/mcp-shopify/issues"
+  },
+  "homepage": "https://github.com/modellers/mcp-shopify#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.3",
+    "@types/express": "^5.0.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "node-fetch": "^2.7.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/node-fetch": "^2.6.13",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
