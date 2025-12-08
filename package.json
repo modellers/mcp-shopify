@@ -11,6 +11,10 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "prepare": "npm run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "inspector:stdio": "npx @modelcontextprotocol/inspector node dist/index.js",
     "inspector:http": "npx @modelcontextprotocol/inspector http://localhost:3022/sse"
   },
@@ -36,7 +40,9 @@
   "devDependencies": {
     "@types/node": "^24.10.1",
     "@types/node-fetch": "^2.6.13",
+    "@vitest/ui": "^3.2.4",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }

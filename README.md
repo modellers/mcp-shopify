@@ -104,9 +104,27 @@ npm run build
 # Watch mode
 npm run watch
 
+# Run tests
+npm test                  # Run all tests once
+npm run test:watch        # Watch mode
+npm run test:ui           # Interactive UI
+npm run test:coverage     # With coverage report
+
 # Enable debug logging
 DEBUG=true node dist/index.js
 ```
+
+## Testing
+
+The project includes comprehensive tests covering:
+- ✅ Configuration validation and API key masking
+- ✅ HTTP error handling (401, 403, 404, 422, 429, 500+)
+- ✅ GraphQL error handling
+- ✅ All 6 MCP tools (get_item, list_items, total_items, get_order, list_sales, total_sales)
+
+Run tests with: `npm test`
+
+See [TEST_SUMMARY.md](TEST_SUMMARY.md) for detailed test documentation.
 
 ## Tool Examples
 

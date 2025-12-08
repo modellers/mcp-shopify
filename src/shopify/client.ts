@@ -12,13 +12,96 @@ export interface GraphQLResponse<T = any> {
   }>;
 }
 
+interface TokenResponse {
+  access_token: string;
+  scope: string;
+  expires_in: number;
+}
+
 export class ShopifyClient {
   private endpoint: string;
   private accessToken: string;
+  private clientId: string;
+  private clientSecret: string;
+  private shopDomain: string;
+  private tokenExpiry: number = 0;
+  private useClientCredentials: boolean;
 
   constructor(config: EnvConfig) {
     this.endpoint = config.SHOPIFY_APP_ENDPOINT;
-    this.accessToken = config.SHOPIFY_APP_SECRET;
+    this.clientId = config.SHOPIFY_APP_CLIENT_ID;
+    this.clientSecret = config.SHOPIFY_APP_SECRET;
+
+    // Extract shop domain from endpoint
+    const match = config.SHOPIFY_APP_ENDPOINT.match(/https:\/\/([^\/]+)\//);
+    this.shopDomain = match ? match[1] : '';
+
+    // Check if using client credentials (secret starts with shpss_ or shpcs_)
+    // vs access token (starts with shpat_ or shpca_)
+    this.useClientCredentials = config.SHOPIFY_APP_SECRET.startsWith('shpss_') ||
+                                 config.SHOPIFY_APP_SECRET.startsWith('shpcs_');
+
+    if (this.useClientCredentials) {
+      logger.info('Using client credentials grant flow (tokens expire every 24h)');
+      this.accessToken = ''; // Will be fetched on first request
+    } else {
+      logger.info('Using static access token');
+      this.accessToken = config.SHOPIFY_APP_SECRET;
+    }
+  }
+
+  /**
+   * Exchange client credentials for access token
+   */
+  private async fetchAccessToken(): Promise<void> {
+    const tokenUrl = `https://${this.shopDomain}/admin/oauth/access_token`;
+
+    logger.info('Fetching new access token using client credentials...');
+
+    try {
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          client_id: this.clientId,
+          client_secret: this.clientSecret,
+          grant_type: 'client_credentials',
+        }),
+      });
+
+      if (!response.ok) {
+        const body = await response.text();
+        throw new Error(`Token exchange failed (${response.status}): ${body}`);
+      }
+
+      const tokenData: TokenResponse = await response.json();
+      this.accessToken = tokenData.access_token;
+
+      // Set expiry with 5 minute buffer (24h - 5min)
+      this.tokenExpiry = Date.now() + ((tokenData.expires_in - 300) * 1000);
+
+      logger.info(`Access token obtained, expires in ${tokenData.expires_in}s (${Math.floor(tokenData.expires_in / 3600)}h)`);
+      logger.debug(`Token scopes: ${tokenData.scope}`);
+    } catch (error) {
+      logger.error('Failed to obtain access token', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Ensure we have a valid access token
+   */
+  private async ensureValidToken(): Promise<void> {
+    if (!this.useClientCredentials) {
+      return; // Using static token, no refresh needed
+    }
+
+    const now = Date.now();
+    if (!this.accessToken || now >= this.tokenExpiry) {
+      await this.fetchAccessToken();
+    }
   }
 
   /**
@@ -28,6 +111,9 @@ export class ShopifyClient {
     query: string,
     variables?: Record<string, any>
   ): Promise<T> {
+    // Ensure we have a valid access token
+    await this.ensureValidToken();
+
     const startTime = Date.now();
 
     logger.debug('Executing GraphQL query', { query, variables });

@@ -6,8 +6,17 @@ dotenv.config();
 
 const envSchema = z.object({
   SHOPIFY_APP_CLIENT_ID: z.string().min(1, 'SHOPIFY_APP_CLIENT_ID is required'),
-  SHOPIFY_APP_SECRET: z.string().min(1, 'SHOPIFY_APP_SECRET is required'),
-  SHOPIFY_APP_ENDPOINT: z.string().url('SHOPIFY_APP_ENDPOINT must be a valid URL'),
+  SHOPIFY_APP_SECRET: z.string().min(1, 'SHOPIFY_APP_SECRET is required')
+    .refine(
+      (val) => val.startsWith('shpat_') || val.startsWith('shpss_'),
+      'SHOPIFY_APP_SECRET must be a valid Shopify access token (starts with shpat_ or shpss_)'
+    ),
+  SHOPIFY_APP_ENDPOINT: z.string()
+    .url('SHOPIFY_APP_ENDPOINT must be a valid URL')
+    .refine(
+      (val) => val.includes('/admin/api/') && val.endsWith('/graphql.json'),
+      'SHOPIFY_APP_ENDPOINT must be a Shopify GraphQL endpoint (format: https://{store}.myshopify.com/admin/api/{version}/graphql.json)'
+    ),
   STORE_COUNTRY: z.string().default('IS'),
   STORE_CURRENCY: z.string().default('ISK'),
   STORE_LOCALE: z.string().default('is-IS'),
