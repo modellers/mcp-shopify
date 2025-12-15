@@ -34,19 +34,19 @@ class Logger {
 
   debug(message: string, data?: any): void {
     if (this.shouldLog(LogLevel.DEBUG)) {
-      console.debug(this.format(LogLevel.DEBUG, message, data));
+      process.stderr.write(this.format(LogLevel.DEBUG, message, data) + '\n');
     }
   }
 
   info(message: string, data?: any): void {
     if (this.shouldLog(LogLevel.INFO)) {
-      console.info(this.format(LogLevel.INFO, message, data));
+      process.stderr.write(this.format(LogLevel.INFO, message, data) + '\n');
     }
   }
 
   warn(message: string, data?: any): void {
     if (this.shouldLog(LogLevel.WARN)) {
-      console.warn(this.format(LogLevel.WARN, message, data));
+      process.stderr.write(this.format(LogLevel.WARN, message, data) + '\n');
     }
   }
 
@@ -63,7 +63,7 @@ class Logger {
         };
       }
 
-      console.error(this.format(LogLevel.ERROR, message, errorData));
+      process.stderr.write(this.format(LogLevel.ERROR, message, errorData) + '\n');
     }
   }
 
