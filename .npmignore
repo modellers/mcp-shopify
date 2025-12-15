@@ -1,0 +1,35 @@
+# Source files (TypeScript)
+src/
+
+# Test files
+*.test.ts
+*.test.js
+**/*.test.ts
+**/*.test.js
+
+# Documentation (keep only README.md)
+CLAUDE.md
+IMPLEMENTATION.md
+SETUP-GUIDE.md
+SHOPIFY-API.md
+STATUS.md
+TEST_SUMMARY.md
+
+# Environment files
+.env
+.env.*
+
+# Build configuration
+tsconfig.json
+vitest.config.ts
+
+# Development files
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Logs
+*.log
